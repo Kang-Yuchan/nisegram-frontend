@@ -3,8 +3,6 @@ import styled from "styled-components";
 import Input from "../../Components/Input";
 import Button from "../../Components/Button";
 
-
-
 const Wrapper = styled.div`
     min-height: 80vh;
     display: flex;
@@ -48,6 +46,14 @@ const Form = styled(Box)`
     }
 `;
 
+const LogoImg = styled.img`
+    width: 170px;
+    height: 70px;
+    margin-left: 44px;
+    margin-top: -20px;
+    margin-bottom: 30px;
+`;
+
 export default ({
     action,
     username,
@@ -59,6 +65,7 @@ export default ({
 }) => (
     <Wrapper>
         <Form>
+        <LogoImg src="https://i.gyazo.com/bb3f106dc610ff280bece282e96c2c9a.png" />
             {action === "logIn" ? (
                 <form onSubmit={onSubmit}>
                     <Input placeholder={"メールアドレス"} {...email } type="email" />
