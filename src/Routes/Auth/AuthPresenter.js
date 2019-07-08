@@ -55,17 +55,17 @@ export default ({
     lastName,
     email,
     setAction,
-    onLogin
+    onSubmit
 }) => (
     <Wrapper>
         <Form>
             {action === "logIn" ? (
-                <form onSubmit={onLogin}>
+                <form onSubmit={onSubmit}>
                     <Input placeholder={"メールアドレス"} {...email } type="email" />
                     <Button text={"ログイン"} />
                 </form>
             ) : (
-                <form onSubmit={onLogin}>
+                <form onSubmit={onSubmit}>
                     <Input placeholder={"名前"} {...firstName }/>
                     <Input placeholder={"姓"} {...lastName }/>
                     <Input placeholder={"メールアドレス"} {...email } type="email" />
