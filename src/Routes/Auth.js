@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import styled from "styled-components";
 import Input from "../Components/Input";
 import Button from "../Components/Button";
+import useInput from "../Hooks/userInput";
 
 
 const Wrapper = styled.div`
@@ -50,22 +51,26 @@ const Form = styled(Box)`
 export default () => {
     
     const [ action, setAction ] = useState("logIn");
-    
+    const username = useInput("");
+    const password = useInput("");
+    const fullName = useInput("");
+    const email = useInput("");
+
     return (
         <Wrapper>
             <Form>
                 {action === "logIn" ? (
                     <form>
-                        <Input placeholder={"ユーザーネーム"}/>
-                        <Input placeholder={"パスワード"} />
+                        <Input placeholder={"ユーザーネーム"} {...username } />
+                        <Input placeholder={"パスワード"} {...password } type="password" />
                         <Button text={"ログイン"} />
                     </form>
                 ) : (
                     <form>
-                        <Input placeholder={"メールアドレス"} />
-                        <Input placeholder={"フルネーム"} />
-                        <Input placeholder={"ユーザーネーム"} />
-                        <Input placeholder={"パスワード"} />
+                        <Input placeholder={"メールアドレス"} {...email } type="email" />
+                        <Input placeholder={"フルネーム"} {...fullName }/>
+                        <Input placeholder={"ユーザーネーム"} {...username } />
+                        <Input placeholder={"パスワード"} {...password } type="password" />
                         <Button text={"登録する"} />
                     </form>
                 )}
