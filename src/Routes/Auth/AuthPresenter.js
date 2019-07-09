@@ -61,27 +61,37 @@ export default ({
     lastName,
     email,
     setAction,
-    onSubmit
+    onSubmit,
+    secret
 }) => (
     <Wrapper>
         <Form>
         <LogoImg src="https://i.gyazo.com/bb3f106dc610ff280bece282e96c2c9a.png" />
-            {action === "logIn" ? (
+            {action === "logIn" && (
                 <form onSubmit={onSubmit}>
                     <Input placeholder={"メールアドレス"} {...email } type="email" />
                     <Button text={"ログイン"} />
                 </form>
-            ) : (
+            )} 
+            {action === "signUp" && (
                 <form onSubmit={onSubmit}>
                     <Input placeholder={"名前"} {...firstName }/>
                     <Input placeholder={"姓"} {...lastName }/>
-                    <Input placeholder={"メールアドレス"} {...email } type="email" />
-                    <Input placeholder={"ユーザーネーム"} {...username } />
+                    <Input placeholder={"メールアドレス"} {...email} type="email" />
+                    <Input placeholder={"ユーザーネーム"} {...username} />
                     <Button text={"登録する"} />
                 </form>
             )}
+             {action === "confirm" && (
+                <form onSubmit={onSubmit}>
+                    <Input placeholder={"ログインシークレット"} required {...secret } />
+                    <Button text={"認証する"} />
+                </form>
+             )}
         </Form>
-        <StateChanger>
+        
+        {action !== "confirm" && (
+            <StateChanger>
             {action === "logIn" ? (
               <>
                 アカウントをお持ちでないですか？{" "}
@@ -94,5 +104,6 @@ export default ({
               </>
             )}
         </StateChanger>
+        )}
     </Wrapper>
 );

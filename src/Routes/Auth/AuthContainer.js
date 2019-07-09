@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import useInput from "../../Hooks/userInput";
 import AuthPresenter from "./AuthPresenter";
 import { useMutation } from "react-apollo-hooks";
-import { LOG_IN, CREATE_ACCOUNT } from "./AuthQueries"; 
+import { LOG_IN, CREATE_ACCOUNT, CONFIRM_SECRET, LOCAL_LOG_IN } from "./AuthQueries"; 
 import { toast } from "react-toastify";
 
 
@@ -12,18 +12,12 @@ export default () => {
     const username = useInput("");
     const firstName = useInput("");
     const lastName = useInput("");
+    const secret = useInput("");
     const email = useInput("");
-    const requestSecret = useMutation(LOG_IN, {
-        variables: { email: email.value },
-        update: (_, { data }) => {
-            const { requestSecret } = data;
-            if(!requestSecret){
-                toast.error("存在しないアカウントです。新たしいアカウントを登録してください。");
-                setTimeout(() => setAction("signUp"), 1000)
-            }
-        }
+    const requestSecretMutation = useMutation(LOG_IN, {
+        variables: { email: email.value }
     });
-    const createAccount = useMutation(CREATE_ACCOUNT, {
+    const createAccountMutation = useMutation(CREATE_ACCOUNT, {
         variables: {
             email: email.value,
             username: username.value,
@@ -32,11 +26,33 @@ export default () => {
         }
     });
 
-    const onSubmit = e => {
+    const confrimSecretMutation = useMutation(CONFIRM_SECRET, {
+        variables: {
+            email: email.value,
+            secret: secret.value
+        }
+    })
+
+    const localLogInMutation = useMutation(LOCAL_LOG_IN);
+    
+
+    const onSubmit = async e => {
         e.preventDefault();
         if(action === "logIn") {
             if (email.value !== "") {
-                requestSecret();
+                try {
+                   const { data: { requestSecret }} = await requestSecretMutation();
+                   if(!requestSecret){
+                       toast.error("存在しないアカウントです。新たしいアカウントを登録してください。");
+                       setTimeout(() => setAction("signUp"), 1000)
+                   } else {
+                       toast.success("ログイン認証のメールで、Login Secretをチェックしてください。");
+                       setAction("confirm");
+                   }
+                } catch {
+                    toast.error("認証ができません、再確認をしてください。")
+                }
+               
             } else {
                 toast.error("メールアドレスを入力してください。");
             }
@@ -47,12 +63,37 @@ export default () => {
             username.value !== "" &&
             firstName.value !== "" &&
             lastName.value !== ""
-            
+
             ) {
-                createAccount();         
+              try {  
+               const { data: { createAccount } } = await createAccountMutation();
+               if(!createAccount) {
+                   toast.error("アカウントを作成できませんでした。");
+               } else {
+                   toast.success("アカウントが作成されました! ログインしてください。")
+                   setTimeout(() => setAction("logIn"), 1000);
+               }
+              } catch (e) {
+                  toast.error(e.message)
+              }         
             } else {
                 toast.error("全項目を入力してください。");
             }
+          } else if (action === "confirm") {
+                if(secret.value !== "") {
+                    try {
+                        const { 
+                            data: { confirmSecret: token }
+                        } = await confrimSecretMutation();
+                        if(token !== "" && token !== undefined) {
+                            localLogInMutation({variables: { token } });
+                        } else {
+                            throw Error();
+                        }
+                    } catch {
+                        toast.error("シークレットを認証できませんでした、再確認してください。");
+                    }
+                }
           }
     };
     return (
@@ -63,6 +104,7 @@ export default () => {
             firstName={firstName} 
             lastName={lastName}
             email={email}
+            secret={secret}
             onSubmit={onSubmit}
         />
     );
