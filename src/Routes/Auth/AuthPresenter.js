@@ -47,8 +47,6 @@ const Form = styled(Box)`
 `;
 
 const LogoImg = styled.img`
-    width: 170px;
-    height: 70px;
     margin-left: 44px;
     margin-top: -20px;
     margin-bottom: 30px;
@@ -66,7 +64,7 @@ export default ({
 }) => (
     <Wrapper>
         <Form>
-        <LogoImg src="https://i.gyazo.com/bb3f106dc610ff280bece282e96c2c9a.png" />
+        <LogoImg width= "170px" height= "70px" src="https://i.gyazo.com/bb3f106dc610ff280bece282e96c2c9a.png" />
             {action === "logIn" && (
                 <form onSubmit={onSubmit}>
                     <Input placeholder={"メールアドレス"} {...email } type="email" />
