@@ -1,5 +1,6 @@
 import React from "react";
 import styled from "styled-components";
+import { Helmet } from "rl-react-helmet";
 import Input from "../../Components/Input";
 import Button from "../../Components/Button";
 
@@ -66,25 +67,40 @@ export default ({
         <Form>
         <LogoImg width= "170px" height= "70px" src="https://i.gyazo.com/bb3f106dc610ff280bece282e96c2c9a.png" />
             {action === "logIn" && (
-                <form onSubmit={onSubmit}>
-                    <Input placeholder={"メールアドレス"} {...email } type="email" />
-                    <Button text={"ログイン"} />
-                </form>
+                <>
+	                <Helmet>
+                        <title>Log In | Nisegram</title>
+                    </Helmet>
+                    <form onSubmit={onSubmit}>
+                        <Input placeholder={"メールアドレス"} {...email } type="email" />
+                        <Button text={"ログイン"} />
+                    </form>
+                </>
             )} 
             {action === "signUp" && (
-                <form onSubmit={onSubmit}>
-                    <Input placeholder={"名前"} {...firstName }/>
-                    <Input placeholder={"姓"} {...lastName }/>
-                    <Input placeholder={"メールアドレス"} {...email} type="email" />
-                    <Input placeholder={"ユーザーネーム"} {...username} />
-                    <Button text={"登録する"} />
-                </form>
+                <>
+                    <Helmet>
+                        <title>Sign Up | Nisegram</title>
+                    </Helmet>
+                    <form onSubmit={onSubmit}>
+                        <Input placeholder={"名前"} {...firstName }/>
+                        <Input placeholder={"姓"} {...lastName }/>
+                        <Input placeholder={"メールアドレス"} {...email} type="email" />
+                        <Input placeholder={"ユーザーネーム"} {...username} />
+                        <Button text={"登録する"} />
+                    </form>
+                </>
             )}
              {action === "confirm" && (
-                <form onSubmit={onSubmit}>
-                    <Input placeholder={"ログインシークレット"} required {...secret } />
-                    <Button text={"認証する"} />
-                </form>
+                <>
+                    <Helmet>
+                        <title>Confirm Secret | Nisegram</title>
+                    </Helmet>
+                    <form onSubmit={onSubmit}>
+                        <Input placeholder={"ログインシークレット"} required {...secret } />
+                        <Button text={"認証する"} />
+                    </form>
+                </>
              )}
         </Form>
         
