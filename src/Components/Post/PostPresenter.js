@@ -9,6 +9,7 @@ import TextareaAutosize from "react-autosize-textarea";
   ${props => props.theme.whiteBox};
   width: 100%;
   max-width: 600px;
+  user-select: none;
   margin-bottom: 25px;
 `;
 
@@ -96,7 +97,8 @@ const Textarea = styled(TextareaAutosize)`
   likeCount,
   createdAt,
   newComment,
-  currentItem
+  currentItem,
+  toggleLike
 }) => (
   <Post>
     <Header>
@@ -114,12 +116,12 @@ const Textarea = styled(TextareaAutosize)`
     </Files>
     <Meta>
       <Buttons>
-        <Button>{isLiked ? <HeartFull /> : <HeartEmpty />}</Button>
+        <Button onClick={toggleLike}>{isLiked ? <HeartFull /> : <HeartEmpty />}</Button>
         <Button>
           <Comment />
         </Button>
       </Buttons>
-      <FatText text={likeCount === 1 ? "いいね! 1件" : `いいね！ ${likeCount}件`} />
+      <FatText text={likeCount === 1 ? "いいね！ 1件" : `いいね！ ${likeCount}件`} />
       <Timestamp>{createdAt}</Timestamp>
       <Textarea placeholder={"コメントを追加..."} {...newComment}/>
     </Meta>
