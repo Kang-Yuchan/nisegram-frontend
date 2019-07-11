@@ -4,6 +4,9 @@ import PostPresenter from "./PostPresenter";
 import useInput from "../../Hooks/useInput";
 import { useMutation } from "react-apollo-hooks";
 import { TOGGLE_LIKE, ADD_COMMENT } from "./PostQueries";
+import { ME } from "../../ShareQueries";
+import { useQuery } from "react-apollo-hooks";
+import { toast } from "react-toastify";
 
 
  const PostContainer = ({
@@ -20,7 +23,9 @@ import { TOGGLE_LIKE, ADD_COMMENT } from "./PostQueries";
   const [isLikedS, setIsLiked] = useState(isLiked);
   const [likeCountS, setLikeCount] = useState(likeCount);
   const [currentItem, setCurrentItem] = useState(0);
+  const [selfComments, setSelfComments] = useState([]);
   const comment = useInput("");
+  const { data: meQuery } = useQuery(ME);
   const toggleLikeMutation = useMutation(TOGGLE_LIKE, {
     variables: { postId: id }
   });
@@ -47,6 +52,25 @@ import { TOGGLE_LIKE, ADD_COMMENT } from "./PostQueries";
     }
   };
 
+  const onKeyPress = async event => {
+    const { keyCode } = event;
+    if(keyCode === 13) {
+      event.preventDefault();
+      comment.setValue("");
+      try {
+        await addCommentMutation();
+        setSelfComments([...selfComments, 
+          {
+            id: Math.floor(Math.random() * 100), 
+            text: comment.value, user: {username: meQuery.me.username } 
+          }
+        ]);
+      } catch {
+        toast.error("コメントを追加できませんでした。");
+      }
+  }
+};
+
   return (
         <PostPresenter
             user={user}
@@ -62,6 +86,8 @@ import { TOGGLE_LIKE, ADD_COMMENT } from "./PostQueries";
             setLikeCount={setLikeCount}
             currentItem={currentItem}
             toggleLike={toggleLike}
+            onKeyPress={onKeyPress}
+            selfComments={selfComments}
         />
     );
 };

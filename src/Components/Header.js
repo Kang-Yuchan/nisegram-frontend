@@ -2,10 +2,10 @@ import React from "react";
 import styled from "styled-components";
 import { Link, withRouter } from "react-router-dom";
 import Input from "./Input";
-import { gql } from "apollo-boost";
 import useInput from "../Hooks/useInput";
 import { Compass, HeartEmpty, User } from "./Icons";
 import { useQuery } from "react-apollo-hooks";
+import { ME } from "../ShareQueries";
 
  const Header = styled.header`
   width: 100%;
@@ -76,13 +76,7 @@ const Logo = styled.svg`
   margin-bottom: 5px;
 `
 
-const ME = gql `
-  {
-    me {
-      username
-    }
-  }
-`;
+
 
  export default withRouter(({history}) => {
   const search = useInput("");
@@ -109,7 +103,10 @@ const ME = gql `
         </HeaderColumn>
         <HeaderColumn>
           <form onSubmit={onSearchSubmit}>
-            <SearchInput {...search} placeholder="検索" />
+            <SearchInput 
+              value={search.value} 
+              onChange={search.onChange} 
+              placeholder="検索" />
           </form>
         </HeaderColumn>
         <HeaderColumn>
